@@ -1,0 +1,45 @@
+package com.architect.library.request;
+
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
+
+import com.architect.library.load.model.Resource;
+import com.architect.library.load.model.ResourceCallback;
+import com.architect.library.manager.Engine;
+import com.architect.library.request.target.DrawableImageViewTarget;
+
+public final class SingleRequest implements Request, ResourceCallback {
+
+    private final DrawableImageViewTarget target;
+    private final RequestListener listener;
+    private final Engine engine;
+    private String urlString;
+
+    public SingleRequest(DrawableImageViewTarget target, RequestListener listener, String urlString, Engine engine) {
+        this.target = target;
+        this.listener = listener;
+        this.engine = engine;
+        this.urlString = urlString;
+    }
+
+    public static SingleRequest obtain(DrawableImageViewTarget target, RequestListener listener, String urlString, Engine engine) {
+        return new SingleRequest(target, listener, urlString, engine);
+    }
+
+
+    @Override
+    public void begin() {
+        engine.load(this, urlString);
+    }
+
+
+    @Override
+    public void onResourceReady(BitmapDrawable bitmapDrawable) {
+        target.onResourceReady(bitmapDrawable,null);
+    }
+
+    @Override
+    public void onLoadFailed() {
+
+    }
+}
