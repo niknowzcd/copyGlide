@@ -3,7 +3,7 @@ package com.architect.library.manager;
 import androidx.annotation.NonNull;
 
 
-class ApplicationLifecycle implements Lifecycle {
+public class ApplicationLifecycle implements Lifecycle {
     @Override
     public void addListener(@NonNull LifecycleListener listener) {
         listener.onStart();

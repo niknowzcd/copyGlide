@@ -1,9 +1,12 @@
-package com.architect.library.manager;
+package com.architect.library;
 
 import android.graphics.drawable.Drawable;
 
 import com.architect.library.Glide;
 import com.architect.library.RequestBuilder;
+import com.architect.library.manager.ActivityFragmentLifecycle;
+import com.architect.library.manager.ApplicationLifecycle;
+import com.architect.library.manager.LifecycleListener;
 
 public class RequestManager implements LifecycleListener {
 

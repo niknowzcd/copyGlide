@@ -12,6 +12,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.architect.library.Glide;
+import com.architect.library.RequestManager;
 import com.architect.library.util.Preconditions;
 import com.architect.library.util.Util;
 

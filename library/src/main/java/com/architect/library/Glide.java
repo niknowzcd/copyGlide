@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.architect.library.load.engine.Engine;
-import com.architect.library.manager.RequestManager;
 import com.architect.library.manager.RequestManagerRetriever;
 
 import androidx.annotation.NonNull;

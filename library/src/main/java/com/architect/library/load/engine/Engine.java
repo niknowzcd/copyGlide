@@ -2,8 +2,6 @@ package com.architect.library.load.engine;
 
 import android.graphics.drawable.BitmapDrawable;
 
-import com.architect.library.load.engine.DecodeJob;
-import com.architect.library.load.engine.EngineJob;
 import com.architect.library.load.model.ResourceCallback;
 
 public class Engine implements DecodeJob.Callback {

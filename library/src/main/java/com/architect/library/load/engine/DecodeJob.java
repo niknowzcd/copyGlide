@@ -32,8 +32,6 @@ public class DecodeJob implements Runnable, DataFetcherGenerator.FetcherReadyCal
 
     @Override
     public void onDataFetcherReady(Object data) {
-        System.out.println("onDataFetcherReady ");
-
         //这里有一系列的读取字符流过程,暂时省去
         InputStream inputStream = (InputStream) data;
         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
