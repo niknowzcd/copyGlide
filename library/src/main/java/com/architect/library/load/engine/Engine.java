@@ -1,4 +1,4 @@
-package com.architect.library.manager;
+package com.architect.library.load.engine;
 
 import android.graphics.drawable.BitmapDrawable;
 

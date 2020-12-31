@@ -3,7 +3,7 @@ package com.architect.library;
 import android.content.Context;
 import android.content.ContextWrapper;
 
-import com.architect.library.manager.Engine;
+import com.architect.library.load.engine.Engine;
 
 public class GlideContext extends ContextWrapper {
 

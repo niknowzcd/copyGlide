@@ -1,11 +1,9 @@
 package com.architect.library.request;
 
 import android.graphics.drawable.BitmapDrawable;
-import android.widget.ImageView;
 
-import com.architect.library.load.model.Resource;
 import com.architect.library.load.model.ResourceCallback;
-import com.architect.library.manager.Engine;
+import com.architect.library.load.engine.Engine;
 import com.architect.library.request.target.DrawableImageViewTarget;
 
 public final class SingleRequest implements Request, ResourceCallback {
