@@ -23,13 +23,14 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.image);
 
-        Glide.with(MainActivity.this).load("https://cn.bing.com/sa/simg/hpb/LaDigue_EN-CA1115245085_1920x1080.jpg")
-                .into(imageView);
+
 
         Button btn=findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Glide.with(MainActivity.this).load("https://cn.bing.com/sa/simg/hpb/LaDigue_EN-CA1115245085_1920x1080.jpg")
+                        .into(imageView);
 //                imageView.setImageDrawable(DrawableImageViewTarget.bitmapDrawable);
             }
         });

@@ -7,6 +7,7 @@ import com.architect.library.load.model.GlideUrl;
 import com.architect.library.HttpException;
 import com.architect.library.util.LogTime;
 import com.architect.library.Priority;
+import com.architect.library.util.MyLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,8 @@ import java.net.URL;
 import java.util.Map;
 
 public class HttpUrlFetcher implements DataFetcher<InputStream> {
+
+    private static final String TAG = MyLogger.TAG + HttpUrlFetcher.class.getSimpleName();
 
     private static final int MAXIMUM_REDIRECTS = 5;
     static final int INVALID_STATUS_CODE = -1;
@@ -43,6 +46,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
             callback.onDataReady(inputStream);
         } catch (Exception e) {
             callback.onLoadFailed(e);
+            MyLogger.d(TAG, "loadData error >> " + e.getMessage());
         }
     }
 
@@ -120,9 +124,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
         try {
             return urlConnection.getResponseCode();
         } catch (IOException e) {
-//            if (Log.isLoggable(TAG, Log.DEBUG)) {
-//                Log.d(TAG, "Failed to get a response code", e);
-//            }
+            MyLogger.d(TAG, "getHttpStatusCodeOrInvalid error >> " + e.getMessage());
         }
         return INVALID_STATUS_CODE;
     }

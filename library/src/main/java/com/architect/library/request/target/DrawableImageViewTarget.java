@@ -14,9 +14,11 @@ public class DrawableImageViewTarget extends ImageViewTarget<Drawable> {
 
     @Override
     protected void setResource(final Drawable resource) {
+        System.out.println("11111112 setResource");
         view.post(new Runnable() {
             @Override
             public void run() {
+                System.out.println("1111111 setResource");
                 view.setImageDrawable(resource);
             }
         });
