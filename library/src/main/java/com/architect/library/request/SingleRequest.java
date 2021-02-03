@@ -2,8 +2,10 @@ package com.architect.library.request;
 
 import android.graphics.drawable.BitmapDrawable;
 
-import com.architect.library.load.model.ResourceCallback;
 import com.architect.library.load.engine.Engine;
+import com.architect.library.load.engine.EngineResource;
+import com.architect.library.load.engine.Resource;
+import com.architect.library.load.model.ResourceCallback;
 import com.architect.library.request.target.DrawableImageViewTarget;
 
 public final class SingleRequest implements Request, ResourceCallback {
@@ -30,10 +32,12 @@ public final class SingleRequest implements Request, ResourceCallback {
         engine.load(this, urlString);
     }
 
-
     @Override
-    public void onResourceReady(BitmapDrawable bitmapDrawable) {
-        target.onResourceReady(bitmapDrawable,null);
+    public void onResourceReady(Resource<?> resource) {
+        if (resource instanceof EngineResource) {
+            BitmapDrawable object = ((EngineResource<Object>) resource).getBitmapDrawable();
+            target.onResourceReady(object, null);
+        }
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.architect.library.load.engine;
 
-import android.graphics.drawable.BitmapDrawable;
-
 import com.architect.library.Key;
 
 import java.util.concurrent.ExecutorService;
@@ -24,14 +22,13 @@ public class EngineJob implements DecodeJob.Callback {
         service.execute(decodeJob);
     }
 
-
-    private void notifyCallbacksOfResult(BitmapDrawable bitmapDrawable) {
-        engineJobListener.onEngineJobComplete(this, key, bitmapDrawable);
+    private void notifyCallbacksOfResult(EngineResource<?> resource) {
+        engineJobListener.onEngineJobComplete(this, key, resource);
     }
 
     @Override
-    public void onResourceReady(BitmapDrawable bitmapDrawable) {
-        notifyCallbacksOfResult(bitmapDrawable);
+    public void onResourceReady(EngineResource<?> resource) {
+        notifyCallbacksOfResult(resource);
     }
 
     @Override

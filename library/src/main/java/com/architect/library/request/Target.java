@@ -2,6 +2,7 @@ package com.architect.library.request;
 
 import android.graphics.drawable.Drawable;
 
+import com.architect.library.load.engine.Resource;
 import com.architect.library.manager.LifecycleListener;
 
 import androidx.annotation.Nullable;

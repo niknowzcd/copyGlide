@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
  * @CreateDate: 2021/1/8 下午3:03
  */
 
-public class LruResourceCache extends LruCache<Key, BitmapDrawable> implements MemoryCache {
+public class LruResourceCache extends LruCache<Key, EngineResource<?>> implements MemoryCache {
     /**
      * Constructor for LruCache.
      *
@@ -25,7 +25,7 @@ public class LruResourceCache extends LruCache<Key, BitmapDrawable> implements M
     }
 
     @Override
-    protected int getSize(@Nullable BitmapDrawable item) {
+    protected int getSize(@Nullable EngineResource<?> item) {
         return super.getSize(item);
     }
 

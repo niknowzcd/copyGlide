@@ -1,11 +1,9 @@
 package com.architect.library.load.engine;
 
-import android.graphics.drawable.BitmapDrawable;
-
 import com.architect.library.Key;
 import com.architect.library.load.model.ResourceCallback;
 
-public class Engine implements DecodeJob.Callback, EngineJobListener {
+public class Engine implements DecodeJob.Callback, EngineJobListener, EngineResource.ResourceListener {
 
     private static final String TAG = Engine.class.getSimpleName();
 
@@ -26,11 +24,12 @@ public class Engine implements DecodeJob.Callback, EngineJobListener {
         this.resourceCallback = resourceCallback;
 
         EngineKey key = new EngineKey(urlString);
-        BitmapDrawable bitmapDrawable = loadFromMemory(key, true);
-        if (bitmapDrawable == null) {
+        EngineResource<?> resource = loadFromMemory(key, true);
+
+        if (resource == null) {
             waitForExistingOrStartNewJob(key, urlString);
         } else {
-            this.resourceCallback.onResourceReady(bitmapDrawable);
+            this.resourceCallback.onResourceReady(resource);
         }
     }
 
@@ -51,45 +50,44 @@ public class Engine implements DecodeJob.Callback, EngineJobListener {
     }
 
 
-    private BitmapDrawable loadFromMemory(EngineKey key, boolean isMemoryCacheable) {
+    private EngineResource<?> loadFromMemory(EngineKey key, boolean isMemoryCacheable) {
         if (!isMemoryCacheable) return null;
 
         //从活动缓存加载
-        BitmapDrawable active = loadFromActiveResources(key);
+        EngineResource<?> active = loadFromActiveResources(key);
         if (active != null) return active;
 
         //从缓存中加载
-        BitmapDrawable cache = loadFromCache(key);
+        EngineResource<?> cache = loadFromCache(key);
         if (cache != null) return cache;
 
         return null;
     }
 
-    private BitmapDrawable loadFromActiveResources(EngineKey key) {
-        BitmapDrawable active = activeResource.get(key);
+    private EngineResource<?> loadFromActiveResources(EngineKey key) {
+        EngineResource<?> resource = activeResource.get(key);
 
-        if (active != null) {
-            //todo 计数
+        if (resource != null) {
+            resource.acquire();
         }
-        return active;
+        return resource;
     }
 
     /**
      * 磁盘缓存的加入时机在资源释放的时候添加的，
      */
-    private BitmapDrawable loadFromCache(EngineKey key) {
-        BitmapDrawable cached = memoryCache.remove(key);
+    private EngineResource<?> loadFromCache(EngineKey key) {
+        EngineResource<?> cached = memoryCache.remove(key);
         //从内存缓存取到的数据，放入到活动缓存中
         if (cached != null) {
             activeResource.activate(key, cached);
         }
         return cached;
-
     }
 
     @Override
-    public void onResourceReady(BitmapDrawable bitmapDrawable) {
-        resourceCallback.onResourceReady(bitmapDrawable);
+    public void onResourceReady(EngineResource<?> resource) {
+        resourceCallback.onResourceReady(resource);
     }
 
     @Override
@@ -98,18 +96,26 @@ public class Engine implements DecodeJob.Callback, EngineJobListener {
     }
 
     @Override
-    public void onEngineJobComplete(EngineJob engineJob, Key key, BitmapDrawable bitmapDrawable) {
-        if (bitmapDrawable != null) {
-            activeResource.activate(key, bitmapDrawable);
+    public void onEngineJobComplete(EngineJob engineJob, Key key, EngineResource<?> resource) {
+        if (resource != null) {
+            activeResource.activate(key, resource);
         }
         jobs.removeIfCurrent(key, engineJob);
 
         //todo 这里的回调后续要调整
-        resourceCallback.onResourceReady(bitmapDrawable);
+        resourceCallback.onResourceReady(resource);
     }
 
     @Override
     public void onEngineJobCancelled(EngineJob engineJob, Key key) {
         jobs.removeIfCurrent(key, engineJob);
+    }
+
+    @Override
+    public void onResourceReleased(Key key, EngineResource<?> resource) {
+        activeResource.deactivate(key);
+        if (resource.isMemoryCacheable()) {
+            memoryCache.put(key, resource);
+        }
     }
 }

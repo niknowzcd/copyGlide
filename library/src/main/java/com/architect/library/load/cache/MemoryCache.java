@@ -1,8 +1,7 @@
 package com.architect.library.load.cache;
 
-import android.graphics.drawable.BitmapDrawable;
-
 import com.architect.library.Key;
+import com.architect.library.load.engine.Resource;
 
 /**
  * @Author: dly
@@ -11,5 +10,5 @@ import com.architect.library.Key;
 public interface MemoryCache {
 
 
-    BitmapDrawable remove(Key key);
+    Resource remove(Key key);
 }

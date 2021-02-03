@@ -14,9 +14,9 @@ public class DecodeJob implements Runnable, DataFetcherGenerator.FetcherReadyCal
     private String urlString;
     private Callback callback;
 
-    public DecodeJob(String urlString,Callback callback) {
+    public DecodeJob(String urlString, Callback callback) {
         this.urlString = urlString;
-        this.callback=callback;
+        this.callback = callback;
     }
 
     @Override
@@ -35,13 +35,14 @@ public class DecodeJob implements Runnable, DataFetcherGenerator.FetcherReadyCal
         //这里有一系列的读取字符流过程,暂时省去
         InputStream inputStream = (InputStream) data;
         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
-        callback.onResourceReady(bitmapDrawable);
+        final BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
+
+        EngineResource<BitmapDrawable> resource = new EngineResource<>(bitmapDrawable);
+        callback.onResourceReady(resource);
     }
 
-
     public interface Callback {
-        void onResourceReady(BitmapDrawable bitmapDrawable);
+        void onResourceReady(EngineResource<?> resource);
 
         void onLoadFailed();
     }

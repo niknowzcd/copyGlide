@@ -4,7 +4,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Process;
 
 import com.architect.library.Key;
-import com.architect.library.load.model.Resource;
 import com.architect.library.util.ThreadUtils;
 
 import java.lang.ref.Reference;
@@ -18,9 +17,9 @@ import java.util.concurrent.Executors;
 
 
 /**
- *  @Author: dly
- *  @CreateDate: 2021/1/7 下午7:46
- *
+ * @Author: dly
+ * @CreateDate: 2021/1/7 下午7:46
+ * <p>
  * 活动缓存也是第一级缓存
  * <p>
  * WeakReference 参考
@@ -43,11 +42,10 @@ import java.util.concurrent.Executors;
 
 final class ActiveResource {
 
-    //    private final boolean isActiveResourceRetentionAllowed;
     private final Executor monitorClearedResourcesExecutor =
             Executors.newSingleThreadExecutor(ThreadUtils.threadFactory("glide-active-resources", Process.THREAD_PRIORITY_BACKGROUND));
     final Map<Key, ResourceWeakReference> activeEngineResources = new HashMap<>();
-    private final ReferenceQueue<BitmapDrawable> resourceReferenceQueue = new ReferenceQueue<>();
+    private final ReferenceQueue<EngineResource<?>> resourceReferenceQueue = new ReferenceQueue<>();
 
     private volatile boolean isShutdown;
 
@@ -62,7 +60,7 @@ final class ActiveResource {
     }
 
     //激活储存的，相当于put
-    synchronized void activate(Key key, BitmapDrawable resource) {
+    synchronized void activate(Key key, EngineResource<?> resource) {
         ResourceWeakReference toPut = new ResourceWeakReference(resource, resourceReferenceQueue, key, true);
 
         //map在put数据的时候，如果同一个key下已经有了数据，在覆盖的同时会将被覆盖的数据返回回来
@@ -77,11 +75,11 @@ final class ActiveResource {
         if (removed != null) removed.reset();
     }
 
-    synchronized BitmapDrawable get(Key key) {
+    synchronized EngineResource<?> get(Key key) {
         ResourceWeakReference activeRef = activeEngineResources.get(key);
         if (activeRef == null) return null;
 
-        BitmapDrawable active = activeRef.get();
+        EngineResource<?> active = activeRef.get();
         if (active == null) {
             cleanupActiveReference(activeRef);
         }
@@ -97,7 +95,7 @@ final class ActiveResource {
     private void cleanReferenceQueue() {
         while (!isShutdown) {
             try {
-                Reference<? extends BitmapDrawable> remove = resourceReferenceQueue.remove();
+                Reference<? extends EngineResource<?>> remove = resourceReferenceQueue.remove();
                 ResourceWeakReference ref = (ResourceWeakReference) remove;
                 cleanupActiveReference(ref);
 
@@ -127,13 +125,13 @@ final class ActiveResource {
      * WeakReference.super 可以接受两个参数，第二个参数是一个ReferenceQueue队列。
      * 当referent被回收的时候，会把这个对象放到ReferenceQueue中 ，可以通过System.gc()来手动回收
      */
-    static final class ResourceWeakReference extends WeakReference<BitmapDrawable> {
+    static final class ResourceWeakReference extends WeakReference<EngineResource<?>> {
         final Key key;
         final boolean isCacheable;
         Resource<?> resource;
 
 
-        public ResourceWeakReference(BitmapDrawable referent, ReferenceQueue<? super BitmapDrawable> q, Key key, boolean isCacheable) {
+        public ResourceWeakReference(EngineResource<?> referent, ReferenceQueue<? super EngineResource<?>> q, Key key, boolean isCacheable) {
             super(referent, q);
             this.key = key;
             this.isCacheable = isCacheable;
