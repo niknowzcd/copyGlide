@@ -1,7 +1,5 @@
 package com.architect.library.load.engine;
 
-import android.graphics.drawable.BitmapDrawable;
-
 import com.architect.library.Key;
 import com.architect.library.load.cache.MemoryCache;
 import com.architect.library.util.LruCache;

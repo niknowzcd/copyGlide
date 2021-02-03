@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
  * <p>
  * Q:MemoryCache底层用的是LinkedHashMap.为什么还要多一层ActiveCache呢?
  * A:ActiveCache可以理解为MemoryCache的备用空间.
- * 当需要用到某个图片的时候，将图片移动到ActiveCache，而将MemoryCache对应的图片删除。这样能延迟MemoryCache内存过大，进行的清理工作。
+ * 当需要用到某个图片的时候，将图片移动到ActiveCache，而将MemoryCache对应的图片删除。这样能延迟MemoryCache因为内存过大，进行的清理工作。
  * <p>
  * Q:那为什么有了ActiveCache，又要MemoryCache呢？
  * A:因为ActiveCache采用的是WeakReference虚引用，在很多情况下都容易被清理掉，这个时候如果没有MemoryCache的话，就只能去磁盘或者网络获取了。

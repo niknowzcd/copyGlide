@@ -10,5 +10,5 @@ import com.architect.library.load.engine.Resource;
 public interface MemoryCache {
 
 
-    Resource remove(Key key);
+    Resource<?> remove(Key key);
 }
