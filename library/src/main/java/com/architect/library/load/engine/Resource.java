@@ -6,8 +6,9 @@ package com.architect.library.load.engine;
  */
 public interface Resource<Z> {
 
-
     Z get();
+
+    int getSize();
 
     void recycle();
 }

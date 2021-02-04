@@ -24,6 +24,8 @@ public class EngineJob implements DecodeJob.Callback {
 
     private void notifyCallbacksOfResult(EngineResource<?> resource) {
         engineJobListener.onEngineJobComplete(this, key, resource);
+
+        //todo 这里会有个资源释放的过程
     }
 
     @Override

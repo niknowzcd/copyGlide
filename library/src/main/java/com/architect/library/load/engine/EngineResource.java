@@ -58,6 +58,11 @@ public class EngineResource<Z> implements Resource<Z> {
     }
 
     @Override
+    public int getSize() {
+        return resource.getSize();
+    }
+
+    @Override
     public synchronized void recycle() {
         if (acquired > 0) {
             throw new IllegalStateException("Cannot recycle a resource while it is still acquired");

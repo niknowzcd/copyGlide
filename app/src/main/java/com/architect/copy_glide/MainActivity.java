@@ -23,9 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.image);
 
-
-
-        Button btn=findViewById(R.id.btn);
+        Button btn = findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

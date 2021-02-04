@@ -74,16 +74,30 @@ public class Engine implements DecodeJob.Callback, EngineJobListener, EngineReso
     }
 
     /**
-     * 磁盘缓存的加入时机在资源释放的时候添加的，
+     * 内存缓存的加入时机在资源释放的时候，
      */
     private EngineResource<?> loadFromCache(EngineKey key) {
-        EngineResource<?> cached = memoryCache.remove(key);
+        EngineResource<?> cached = getEngineResourceFromCache(key);
         //从内存缓存取到的数据，放入到活动缓存中
         if (cached != null) {
             activeResource.activate(key, cached);
         }
         return cached;
     }
+
+    private EngineResource<?> getEngineResourceFromCache(EngineKey key) {
+        Resource<?> cached = memoryCache.remove(key);
+
+        final EngineResource<?> result;
+        if (cached instanceof EngineResource) {
+            result = (EngineResource<?>) cached;
+        } else {
+            result = null;
+        }
+
+        return result;
+    }
+
 
     @Override
     public void onResourceReady(EngineResource<?> resource) {
