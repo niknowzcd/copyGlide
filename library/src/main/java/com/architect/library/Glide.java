@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.architect.library.load.engine.Engine;
+import com.architect.library.load.resource.BitmapDrawableTranscoder;
 import com.architect.library.manager.RequestManagerRetriever;
 
 import androidx.annotation.NonNull;
@@ -15,12 +16,16 @@ public class Glide {
     private static volatile Glide glide;
     private final GlideContext glideContext;
     private static volatile boolean isInitializing;
+    //    private final Registry registry;
     private Engine engine;
     private RequestManagerRetriever requestManagerRetriever;
+
 
     Glide(Context context, Engine engine, RequestManagerRetriever requestManagerRetriever) {
         this.engine = engine;
         this.requestManagerRetriever = requestManagerRetriever;
+
+        Registry.register(context,Registry.BUCKET_BITMAP_DRAWABLE, new BitmapDrawableTranscoder(context));
 
         glideContext = new GlideContext(context, engine);
     }

@@ -2,8 +2,6 @@ package com.architect.library;
 
 import android.graphics.drawable.Drawable;
 
-import com.architect.library.Glide;
-import com.architect.library.RequestBuilder;
 import com.architect.library.manager.ActivityFragmentLifecycle;
 import com.architect.library.manager.ApplicationLifecycle;
 import com.architect.library.manager.LifecycleListener;
@@ -32,8 +30,8 @@ public class RequestManager implements LifecycleListener {
         return as(Drawable.class);
     }
 
-    private <ResourceType> RequestBuilder<ResourceType> as(Class<ResourceType> drawableClass) {
-        return new RequestBuilder<>(glide);
+    private RequestBuilder<Drawable> as(Class<Drawable> targetClass) {
+        return new RequestBuilder<>(glide, targetClass);
     }
 
 

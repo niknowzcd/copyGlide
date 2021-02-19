@@ -20,14 +20,14 @@ public class Engine implements DecodeJob.Callback, EngineJobListener, EngineReso
         jobs = new Jobs();
     }
 
-    public void load(ResourceCallback resourceCallback, String urlString) {
+    public <Drawable> void load(ResourceCallback resourceCallback, String urlString, Class<Drawable> transcodeClass) {
         this.resourceCallback = resourceCallback;
 
         EngineKey key = new EngineKey(urlString);
         EngineResource<?> resource = loadFromMemory(key, true);
 
         if (resource == null) {
-            waitForExistingOrStartNewJob(key, urlString);
+            waitForExistingOrStartNewJob(key, urlString, transcodeClass);
         } else {
             this.resourceCallback.onResourceReady(resource);
         }
@@ -36,15 +36,15 @@ public class Engine implements DecodeJob.Callback, EngineJobListener, EngineReso
     /**
      * 复用老的enginJob或者开启一个新的engineJob
      */
-    private void waitForExistingOrStartNewJob(EngineKey key, String urlString) {
-        EngineJob current = jobs.get(key, false);
+    private <Drawable> void waitForExistingOrStartNewJob(EngineKey key, String urlString, Class<Drawable> drawableClass) {
+        EngineJob<?> current = jobs.get(key, false);
         if (current != null) {
             //todo
             return;
         }
 
-        EngineJob engineJob = new EngineJob(key, true, this);
-        DecodeJob decodeJob = new DecodeJob(urlString, engineJob);
+        EngineJob<Drawable> engineJob = new EngineJob<>(key, true, this);
+        DecodeJob<Drawable> decodeJob = new DecodeJob<>(urlString, engineJob, drawableClass);
 
         engineJob.start(decodeJob);
     }
@@ -98,9 +98,8 @@ public class Engine implements DecodeJob.Callback, EngineJobListener, EngineReso
         return result;
     }
 
-
     @Override
-    public void onResourceReady(EngineResource<?> resource) {
+    public void onResourceReady(Resource resource) {
         resourceCallback.onResourceReady(resource);
     }
 
@@ -111,10 +110,10 @@ public class Engine implements DecodeJob.Callback, EngineJobListener, EngineReso
 
     @Override
     public void onEngineJobComplete(EngineJob engineJob, Key key, EngineResource<?> resource) {
-        if (resource != null) {
-            activeResource.activate(key, resource);
-        }
-        jobs.removeIfCurrent(key, engineJob);
+//        if (resource != null) {
+//            activeResource.activate(key, resource);
+//        }
+//        jobs.removeIfCurrent(key, engineJob);
 
         //todo 这里的回调后续要调整
         resourceCallback.onResourceReady(resource);

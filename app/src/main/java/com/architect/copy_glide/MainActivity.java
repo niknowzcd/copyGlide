@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.architect.library.Glide;
 import com.architect.library.request.target.DrawableImageViewTarget;
+import com.architect.library.temp.InputStreamBitmapImageDecoderResourceDecoder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,12 +33,18 @@ public class MainActivity extends AppCompatActivity {
 //                imageView.setImageDrawable(DrawableImageViewTarget.bitmapDrawable);
             }
         });
+
+        
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(InputStreamBitmapImageDecoderResourceDecoder.bitmap!=null){
+            imageView.setImageBitmap(InputStreamBitmapImageDecoderResourceDecoder.bitmap);
+        }
 
 //        Glide.with(this).load("https://cn.bing.com/sa/simg/hpb/LaDigue_EN-CA1115245085_1920x1080.jpg")
 //                .into(imageView);

@@ -1,7 +1,5 @@
 package com.architect.library.load.engine;
 
-import android.graphics.drawable.BitmapDrawable;
-
 import com.architect.library.Key;
 import com.architect.library.util.Preconditions;
 
@@ -16,11 +14,9 @@ public class EngineResource<Z> implements Resource<Z> {
 
     private boolean isMemoryCacheable;
     private boolean isRecyclable;
-    private Resource<Z> resource;
+    public Resource<Z> resource;
     private ResourceListener listener;
     private Key key;
-
-    private BitmapDrawable bitmapDrawable;
 
     //计数器
     private int acquired;
@@ -28,19 +24,12 @@ public class EngineResource<Z> implements Resource<Z> {
     private boolean isRecycled;
 
 
-    public EngineResource(BitmapDrawable bitmapDrawable) {
-        this.bitmapDrawable = bitmapDrawable;
-    }
-
-    public BitmapDrawable getBitmapDrawable() {
-        return bitmapDrawable;
-    }
-
-    public EngineResource(boolean isMemoryCacheable, boolean isRecyclable, Resource<Z> resource, ResourceListener listener, Key key) {
+    public EngineResource(Resource<Z> resource, boolean isMemoryCacheable, boolean isRecyclable, ResourceListener listener, Key key) {
         this.isMemoryCacheable = isMemoryCacheable;
         this.isRecyclable = isRecyclable;
         this.resource = Preconditions.checkNotNull(resource);
-        this.listener = Preconditions.checkNotNull(listener);
+//        this.listener = Preconditions.checkNotNull(listener);
+        this.listener = listener;
         this.key = key;
     }
 
@@ -53,8 +42,13 @@ public class EngineResource<Z> implements Resource<Z> {
     }
 
     @Override
-    public Z get() {
+    public Class<Z> getResourceClass() {
         return null;
+    }
+
+    @Override
+    public Z get() {
+        return resource.get();
     }
 
     @Override

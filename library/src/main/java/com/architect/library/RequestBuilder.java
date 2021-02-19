@@ -6,24 +6,25 @@ import com.architect.library.request.BaseRequestOptions;
 import com.architect.library.request.Request;
 import com.architect.library.request.RequestListener;
 import com.architect.library.request.SingleRequest;
-import com.architect.library.request.target.DrawableImageViewTarget;
+import com.architect.library.request.Target;
+import com.architect.library.request.target.ViewTarget;
 
-import androidx.annotation.Nullable;
-
-public class RequestBuilder<T> extends BaseRequestOptions<RequestBuilder<T>> {
+public class RequestBuilder<Drawable> extends BaseRequestOptions<RequestBuilder<Drawable>> {
 
     private String urlString;
     private GlideContext glideContext;
+    private final Class<Drawable> targetClass;
 
-    public RequestBuilder(Glide glide) {
+    public RequestBuilder(Glide glide, Class<Drawable> targetClass) {
         this.glideContext = glide.getGlideContext();
+        this.targetClass = targetClass;
     }
 
-    public RequestBuilder<T> load(String string) {
+    public RequestBuilder<Drawable> load(String string) {
         return loadGeneric(string);
     }
 
-    private RequestBuilder<T> loadGeneric(String string) {
+    private RequestBuilder<Drawable> loadGeneric(String string) {
         this.urlString = string;
         return this;
     }
@@ -33,21 +34,21 @@ public class RequestBuilder<T> extends BaseRequestOptions<RequestBuilder<T>> {
      * 2.开启图片加载
      */
     public void into(ImageView imageView) {
-        DrawableImageViewTarget target = new DrawableImageViewTarget(imageView);
-        Request request = buildRequest(target, urlString, null);
+        ViewTarget<ImageView, Drawable> target = glideContext.buildImageViewTarget(imageView, targetClass);
+
+        Request request = buildRequest(target, urlString, null, targetClass);
 
         request.begin();
     }
 
-    private Request buildRequest(DrawableImageViewTarget target, String urlString, RequestListener listener) {
-        return obtainRequest(target, urlString, listener);
+    private Request buildRequest(Target<Drawable> target, String urlString, RequestListener listener, Class<Drawable> transcodeClass) {
+        return obtainRequest(target, urlString, listener, transcodeClass);
     }
 
 
-    private Request obtainRequest(DrawableImageViewTarget target, String urlString, RequestListener listener) {
-        return SingleRequest.obtain(target, listener, urlString, glideContext.getEngine());
+    private Request obtainRequest(Target<Drawable> target, String urlString, RequestListener listener, Class<Drawable> transcodeClass) {
+        return SingleRequest.obtain(target, listener, urlString, glideContext.getEngine(), transcodeClass);
     }
-
 
 }
 

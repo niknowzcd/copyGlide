@@ -1,44 +1,45 @@
 package com.architect.library.request;
 
-import android.graphics.drawable.BitmapDrawable;
-
 import com.architect.library.load.engine.Engine;
-import com.architect.library.load.engine.EngineResource;
 import com.architect.library.load.engine.Resource;
 import com.architect.library.load.model.ResourceCallback;
-import com.architect.library.request.target.DrawableImageViewTarget;
 
-public final class SingleRequest implements Request, ResourceCallback {
+public final class SingleRequest<Drawable> implements Request, ResourceCallback {
 
-    private final DrawableImageViewTarget target;
+    private final Target<Drawable> target;
+    private final Class<Drawable> targetClass;
     private final RequestListener listener;
     private final Engine engine;
     private String urlString;
 
-    public SingleRequest(DrawableImageViewTarget target, RequestListener listener, String urlString, Engine engine) {
+    public SingleRequest(Target<Drawable> target, RequestListener listener, String urlString, Engine engine, Class<Drawable> targetClass) {
         this.target = target;
         this.listener = listener;
         this.engine = engine;
         this.urlString = urlString;
+        this.targetClass = targetClass;
     }
 
-    public static SingleRequest obtain(DrawableImageViewTarget target, RequestListener listener, String urlString, Engine engine) {
-        return new SingleRequest(target, listener, urlString, engine);
+    public static <Drawable> SingleRequest<Drawable> obtain(Target<Drawable> target, RequestListener listener, String urlString, Engine engine, Class<Drawable> targetClass) {
+        return new SingleRequest<>(target, listener, urlString, engine, targetClass);
     }
-
 
     @Override
     public void begin() {
-        engine.load(this, urlString);
+        engine.load(this, urlString, targetClass);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onResourceReady(Resource<?> resource) {
-        if (resource instanceof EngineResource) {
-            BitmapDrawable object = ((EngineResource<Object>) resource).getBitmapDrawable();
-            target.onResourceReady(object, null);
-        }
+        Object result = resource.get();
+        onResourceReady(resource, (Drawable) result);
     }
+
+    public void onResourceReady(Resource<?> resource, Drawable result) {
+        target.onResourceReady(result, null);
+    }
+
 
     @Override
     public void onLoadFailed() {

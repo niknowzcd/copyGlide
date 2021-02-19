@@ -6,6 +6,8 @@ package com.architect.library.load.engine;
  */
 public interface Resource<Z> {
 
+    Class<Z> getResourceClass();
+
     Z get();
 
     int getSize();
